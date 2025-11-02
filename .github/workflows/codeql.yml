@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'dart' ]
+        language: [ 'javascript', 'typescript' ]  # Dart not fully supported, use JS/TS for now
 
     steps:
       - name: Checkout code
@@ -32,15 +32,8 @@ jobs:
           languages: ${{ matrix.language }}
           queries: security-and-quality
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.16.0'
-          channel: 'stable'
-
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
