@@ -6,12 +6,12 @@ import 'package:health_app/src/models/health_data.dart';
 /// Service for calling sleep analysis API
 class AnalysisService {
   late final Dio _dio;
-  final String? _analysisUrl;
+  final String _analysisUrl;
 
   AnalysisService() : _analysisUrl = dotenv.env['PYTHON_SERVICE_URL'] ?? 'http://localhost:8000' {
     _dio = Dio(
       BaseOptions(
-        baseUrl: _analysisUrl!,
+        baseUrl: _analysisUrl,
         headers: {
           'Content-Type': 'application/json',
         },
