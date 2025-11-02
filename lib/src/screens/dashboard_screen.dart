@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health_app/src/providers/auth_provider.dart';
 import 'package:health_app/src/providers/health_provider.dart';
+import 'package:health_app/src/providers/analysis_provider.dart';
 import 'package:health_app/src/widgets/sleep_stages_pie_chart.dart';
 import 'package:health_app/src/widgets/sleep_trends_chart.dart';
 import 'package:health_app/src/routing/app_router.dart';
@@ -146,6 +147,11 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 24),
+
+                      // Sleep Analysis & Recommendations
+                      _AnalysisSection(session: summary.recentSessions.isNotEmpty ? summary.recentSessions.first : null),
+
                       const SizedBox(height: 24),
 
                       // Latest Sleep Session Details
@@ -458,5 +464,137 @@ class _StatItem extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _AnalysisSection extends ConsumerWidget {
+  final dynamic session;
+
+  const _AnalysisSection({this.session});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (session == null) {
+      return const SizedBox.shrink();
+    }
+
+    final analysisAsync = ref.watch(analyzeSessionProvider(session));
+    final trendsAsync = ref.watch(analyzeTrendsProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sleep Analysis',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 12),
+        analysisAsync.when(
+          data: (analysis) {
+            final sleepScore = analysis['sleep_score'] as num? ?? 0.0;
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Sleep Score',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Chip(
+                          label: Text('${sleepScore.toStringAsFixed(0)}/100'),
+                          backgroundColor: _getScoreColor(sleepScore).withOpacity(0.2),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: sleepScore / 100,
+                      backgroundColor: Colors.grey[800],
+                      valueColor: AlwaysStoppedAnimation<Color>(_getScoreColor(sleepScore)),
+                    ),
+                    if (analysis['note'] != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        analysis['note'] as String,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey,
+                            ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+        const SizedBox(height: 12),
+        trendsAsync.when(
+          data: (trends) {
+            final recommendations = trends['recommendations'] as List? ?? [];
+            if (recommendations.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            return Card(
+              color: Colors.blue.withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.lightbulb_outline, color: Colors.blue),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Recommendations',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...recommendations.map((rec) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.arrow_right, size: 16, color: Colors.blue),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  rec.toString(),
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+
+  Color _getScoreColor(double score) {
+    if (score >= 80) return Colors.green;
+    if (score >= 60) return Colors.orange;
+    return Colors.red;
   }
 }

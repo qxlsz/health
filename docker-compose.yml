@@ -88,9 +88,28 @@ services:
       - postgres
       - supabase-rest
       - supabase-auth
+      - python-service
     environment:
       SUPABASE_URL: ${SUPABASE_URL:-http://localhost:54321}
+      PYTHON_SERVICE_URL: http://python-service:8000
     restart: unless-stopped
+
+  # Python Analysis Service
+  python-service:
+    build:
+      context: ./analysis
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    environment:
+      PORT: 8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   postgres-data:
