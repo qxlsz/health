@@ -90,6 +90,19 @@ Then run the app:
 flutter run -d chrome
 ```
 
+### Validation Before Committing
+
+Before pushing code, validate it:
+
+```bash
+# Run validation script
+./scripts/validate.sh
+
+# Or use Makefile
+make validate
+make all  # Runs all checks (pub get, codegen, validate, analyze, test)
+```
+
 ### Option 1: Docker (All-in-One)
 
 Run everything with Docker Compose:

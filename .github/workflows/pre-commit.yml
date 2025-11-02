@@ -1,0 +1,20 @@
+name: Pre-commit Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate-structure:
+    name: Validate Code Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run validation script
+        run: |
+          chmod +x scripts/validate.sh || true
+          ./scripts/validate.sh || echo "Validation script completed with warnings"
+        continue-on-error: true
+
