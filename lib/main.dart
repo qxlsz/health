@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:health_app/src/routing/app_router.dart';
 import 'package:health_app/src/services/supabase_client.dart';
+import 'package:health_app/src/services/hive_service.dart';
 import 'package:health_app/src/providers/auth_provider.dart';
 
 void main() async {
@@ -14,6 +15,9 @@ void main() async {
 
   // Initialize Supabase client
   await SupabaseService.initialize();
+
+  // Initialize Hive for offline storage
+  await HiveService.initialize();
 
   // Set system UI overlay style for dark mode
   SystemChrome.setSystemUIOverlayStyle(
