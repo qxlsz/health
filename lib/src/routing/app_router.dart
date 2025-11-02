@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:health_app/src/screens/auth_screen.dart';
 import 'package:health_app/src/screens/dashboard_screen.dart';
+import 'package:health_app/src/screens/onboarding_screen.dart';
+import 'package:health_app/src/screens/settings_screen.dart';
 import 'package:health_app/src/providers/auth_provider.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -32,6 +34,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/dashboard',
         name: 'dashboard',
         builder: (context, state) => const DashboardScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
       ),
     ],
   );

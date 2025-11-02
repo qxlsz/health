@@ -110,11 +110,15 @@ SUPABASE_ANON_KEY=your_anon_key_here
 flutter pub get
 ```
 
-### 6. Run Code Generation (if needed)
+### 6. Run Code Generation
+
+Generate the required code for JSON serialization:
 
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+This will generate the necessary files for `health_data.dart` model serialization.
 
 ### 7. Run the App
 
