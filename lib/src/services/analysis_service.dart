@@ -48,7 +48,7 @@ class AnalysisService {
     {int days = 30}
   ) async {
     try {
-      final sessionsData = sessions.map((s) => {
+      final sessionsData = sessions.map((s) {
         return {
           'stages': s.stages.map((stage) => stage.toJson()).toList(),
           'start_time': s.startTime.toIso8601String(),
