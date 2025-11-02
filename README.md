@@ -53,6 +53,24 @@ health_app/
 - Node.js (for edge functions)
 - Python 3.8+ (for analysis service)
 
+## Quick Start
+
+### Option 1: Docker (Recommended)
+
+Run everything with Docker Compose:
+
+```bash
+# Start Supabase and Flutter app
+docker-compose up -d
+
+# Access app at http://localhost:8080
+# Supabase Studio at http://localhost:54323
+```
+
+### Option 2: Local Development
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
+
 ## Local Setup
 
 ### 1. Clone the Repository
@@ -169,10 +187,16 @@ All tables have Row Level Security (RLS) enabled, ensuring users can only access
 ## Development Roadmap
 
 - [x] **Phase 1**: Setup & Scaffold (Auth, Basic UI, Database)
-- [ ] **Phase 2**: UI/UX Basics (Dashboard, Settings, Charts)
-- [ ] **Phase 3**: Integrations (HealthKit, Health Connect, Whoop)
+- [x] **Phase 2**: UI/UX Basics (Dashboard, Settings, Charts)
+- [x] **Phase 3**: Integrations (HealthKit, Health Connect, Whoop)
 - [ ] **Phase 4**: Analysis Module (Python sleep analysis)
 - [ ] **Phase 5**: Self-Hosting & Scaling (Kubernetes, CI/CD)
+
+## App Store Deployment
+
+- **iOS**: See [APP_STORE_GUIDE.md](./APP_STORE_GUIDE.md) for complete App Store submission guide
+- **Android**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for Play Store instructions
+- **Web**: Deploy to Netlify, Vercel, or self-hosted server
 
 ## Contributing
 
