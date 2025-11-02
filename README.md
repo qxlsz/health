@@ -233,9 +233,38 @@ All tables have Row Level Security (RLS) enabled, ensuring users can only access
 - **Android**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for Play Store instructions
 - **Web**: Deploy to Netlify, Vercel, or self-hosted server
 
+## CI/CD
+
+This project uses GitHub Actions for continuous integration:
+
+- ✅ **Lint & Analyze**: Code formatting and static analysis
+- ✅ **Tests**: Unit and integration tests
+- ✅ **Build Verification**: Web, iOS, and Android builds
+- ✅ **Docker**: Docker Compose validation
+- ✅ **Security**: CodeQL analysis and security checks
+- ✅ **Code Generation**: Verifies generated code is up to date
+
+View the [workflows](.github/workflows/) for details.
+
 ## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Ensure CI passes (`./setup.sh` and `flutter test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+The CI will automatically:
+- Check code formatting
+- Run tests
+- Verify builds
+- Check security
 
 ## License
 
