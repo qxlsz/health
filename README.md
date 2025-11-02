@@ -23,6 +23,17 @@ An open-source, privacy-focused health data app for aggregating and analyzing sl
 - **Containerization**: Docker & Docker Compose
 - **Orchestration**: Kubernetes (for scaling)
 
+## Architecture
+
+For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+The app follows a layered architecture:
+- **Presentation Layer**: Flutter UI (Screens, Widgets)
+- **State Management**: Riverpod providers
+- **Service Layer**: Health sync, API clients, Supabase client
+- **Data Layer**: Supabase (PostgreSQL), Hive (local cache)
+- **Integration Layer**: HealthKit, Health Connect, Whoop API
+
 ## Project Structure
 
 ```
@@ -55,7 +66,31 @@ health_app/
 
 ## Quick Start
 
-### Option 1: Docker (Recommended)
+### Automated Setup (Recommended)
+
+Run the setup script to automate everything:
+
+```bash
+# Make script executable (first time only)
+chmod +x setup.sh
+
+# Run setup script
+./setup.sh
+```
+
+This script will:
+- Check prerequisites (Flutter, Docker)
+- Create environment files
+- Start Supabase services
+- Install Flutter dependencies
+- Run code generation
+
+Then run the app:
+```bash
+flutter run -d chrome
+```
+
+### Option 1: Docker (All-in-One)
 
 Run everything with Docker Compose:
 
@@ -69,7 +104,7 @@ docker-compose up -d
 
 ### Option 2: Local Development
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
+See [LOCAL_SETUP.md](./LOCAL_SETUP.md) or [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
 
 ## Local Setup
 
