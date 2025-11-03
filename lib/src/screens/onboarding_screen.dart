@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health_app/src/providers/integration_provider.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -126,23 +128,63 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             'Note: This feature is only available on iOS devices.',
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              // TODO: Implement HealthKit permission request in Phase 3
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('HealthKit integration coming in Phase 3'),
+          Consumer(
+            builder: (context, ref, child) {
+              final syncAsync = ref.watch(syncAppleWatchProvider);
+              final isLoading = syncAsync.isLoading;
+
+              return ElevatedButton.icon(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        if (!Platform.isIOS) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('HealthKit is only available on iOS'),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                          return;
+                        }
+
+                        try {
+                          await ref.read(syncAppleWatchProvider.future);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Apple Watch connected successfully!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            ref.read(integrationStatusProvider.notifier).setStatus('apple', true);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error: ${e.toString()}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                icon: isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.health_and_safety),
+                label: Text(isLoading ? 'Connecting...' : 'Grant HealthKit Permission'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                 ),
               );
             },
-            icon: const Icon(Icons.health_and_safety),
-            label: const Text('Grant HealthKit Permission'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
-            ),
           ),
           const SizedBox(height: 16),
           CheckboxListTile(
@@ -179,23 +221,63 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             'Note: This feature is only available on Android devices.',
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              // TODO: Implement Health Connect permission request in Phase 3
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Health Connect integration coming in Phase 3'),
+          Consumer(
+            builder: (context, ref, child) {
+              final syncAsync = ref.watch(syncAndroidWearProvider);
+              final isLoading = syncAsync.isLoading;
+
+              return ElevatedButton.icon(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        if (!Platform.isAndroid) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Health Connect is only available on Android'),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                          return;
+                        }
+
+                        try {
+                          await ref.read(syncAndroidWearProvider.future);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Android Wear connected successfully!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            ref.read(integrationStatusProvider.notifier).setStatus('android', true);
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error: ${e.toString()}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                icon: isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.health_and_safety),
+                label: Text(isLoading ? 'Connecting...' : 'Grant Health Connect Permission'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                 ),
               );
             },
-            icon: const Icon(Icons.health_and_safety),
-            label: const Text('Grant Health Connect Permission'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
-            ),
           ),
           const SizedBox(height: 16),
           CheckboxListTile(

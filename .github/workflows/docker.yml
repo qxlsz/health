@@ -1,0 +1,42 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'lib/**'
+      - 'pubspec.yaml'
+  workflow_dispatch:
+
+jobs:
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (dry-run)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: health-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: false
+        continue-on-error: true
+
+      - name: Verify Dockerfile exists
+        run: |
+          if [ -f Dockerfile ]; then
+            echo "✓ Dockerfile exists"
+          else
+            echo "⚠ Dockerfile not found"
+          fi

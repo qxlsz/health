@@ -10,8 +10,13 @@ import 'package:health_app/src/providers/auth_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables
-  await dotenv.load(fileName: '.env');
+  // Load environment variables (optional - will use defaults if not found)
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (e) {
+    // .env file not found, use defaults
+    print('Warning: .env file not found, using defaults');
+  }
 
   // Initialize Supabase client
   await SupabaseService.initialize();

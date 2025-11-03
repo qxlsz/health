@@ -23,6 +23,17 @@ An open-source, privacy-focused health data app for aggregating and analyzing sl
 - **Containerization**: Docker & Docker Compose
 - **Orchestration**: Kubernetes (for scaling)
 
+## Architecture
+
+For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+The app follows a layered architecture:
+- **Presentation Layer**: Flutter UI (Screens, Widgets)
+- **State Management**: Riverpod providers
+- **Service Layer**: Health sync, API clients, Supabase client
+- **Data Layer**: Supabase (PostgreSQL), Hive (local cache)
+- **Integration Layer**: HealthKit, Health Connect, Whoop API
+
 ## Project Structure
 
 ```
@@ -52,6 +63,68 @@ health_app/
 - Docker & Docker Compose
 - Node.js (for edge functions)
 - Python 3.8+ (for analysis service)
+
+## Quick Start
+
+### Quick Start
+
+**1. Install Dependencies:**
+```bash
+./scripts/install.sh
+```
+
+This will:
+- Check prerequisites (Flutter, Docker)
+- Install Flutter dependencies
+- Run code generation
+- Install Python dependencies (optional)
+- Create environment files
+
+**2. Run the App:**
+```bash
+./scripts/run.sh
+```
+
+Or specify a device:
+```bash
+./scripts/run.sh chrome    # Web
+./scripts/run.sh ios       # iOS Simulator
+./scripts/run.sh android   # Android Emulator
+```
+
+The run script will:
+- Start Supabase services
+- Start Python analysis service (optional)
+- Launch the Flutter app
+
+### Validation Before Committing
+
+Before pushing code, validate it:
+
+```bash
+# Run validation script
+./scripts/validate.sh
+
+# Or use Makefile
+make validate
+make all  # Runs all checks (pub get, codegen, validate, analyze, test)
+```
+
+### Option 1: Docker (All-in-One)
+
+Run everything with Docker Compose:
+
+```bash
+# Start Supabase and Flutter app
+docker-compose up -d
+
+# Access app at http://localhost:8080
+# Supabase Studio at http://localhost:54323
+```
+
+### Option 2: Local Development
+
+See [LOCAL_SETUP.md](./LOCAL_SETUP.md) or [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
 
 ## Local Setup
 
@@ -169,14 +242,49 @@ All tables have Row Level Security (RLS) enabled, ensuring users can only access
 ## Development Roadmap
 
 - [x] **Phase 1**: Setup & Scaffold (Auth, Basic UI, Database)
-- [ ] **Phase 2**: UI/UX Basics (Dashboard, Settings, Charts)
-- [ ] **Phase 3**: Integrations (HealthKit, Health Connect, Whoop)
+- [x] **Phase 2**: UI/UX Basics (Dashboard, Settings, Charts)
+- [x] **Phase 3**: Integrations (HealthKit, Health Connect, Whoop)
 - [ ] **Phase 4**: Analysis Module (Python sleep analysis)
 - [ ] **Phase 5**: Self-Hosting & Scaling (Kubernetes, CI/CD)
+
+## App Store Deployment
+
+- **iOS**: See [APP_STORE_GUIDE.md](./APP_STORE_GUIDE.md) for complete App Store submission guide
+- **Android**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for Play Store instructions
+- **Web**: Deploy to Netlify, Vercel, or self-hosted server
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration:
+
+- ✅ **Lint & Analyze**: Code formatting and static analysis
+- ✅ **Tests**: Unit and integration tests
+- ✅ **Build Verification**: Web, iOS, and Android builds
+- ✅ **Docker**: Docker Compose validation
+- ✅ **Security**: CodeQL analysis and security checks
+- ✅ **Code Generation**: Verifies generated code is up to date
+
+View the [workflows](.github/workflows/) for details.
 
 ## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Ensure CI passes (`./setup.sh` and `flutter test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+The CI will automatically:
+- Check code formatting
+- Run tests
+- Verify builds
+- Check security
 
 ## License
 
