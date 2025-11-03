@@ -66,29 +66,36 @@ health_app/
 
 ## Quick Start
 
-### Automated Setup (Recommended)
+### Quick Start
 
-Run the setup script to automate everything:
-
+**1. Install Dependencies:**
 ```bash
-# Make script executable (first time only)
-chmod +x setup.sh
-
-# Run setup script
-./setup.sh
+./scripts/install.sh
 ```
 
-This script will:
+This will:
 - Check prerequisites (Flutter, Docker)
-- Create environment files
-- Start Supabase services
 - Install Flutter dependencies
 - Run code generation
+- Install Python dependencies (optional)
+- Create environment files
 
-Then run the app:
+**2. Run the App:**
 ```bash
-flutter run -d chrome
+./scripts/run.sh
 ```
+
+Or specify a device:
+```bash
+./scripts/run.sh chrome    # Web
+./scripts/run.sh ios       # iOS Simulator
+./scripts/run.sh android   # Android Emulator
+```
+
+The run script will:
+- Start Supabase services
+- Start Python analysis service (optional)
+- Launch the Flutter app
 
 ### Validation Before Committing
 

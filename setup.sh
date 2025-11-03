@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Health Data Aggregator - Local Setup Script
-# This script automates the local development setup
+# Health Data Aggregator - Complete Setup Script
+# This script runs install.sh and then starts the app
+# 
+# For just installing dependencies, use: ./scripts/install.sh
+# For just running the app, use: ./scripts/run.sh
 
 set -e  # Exit on any error
 
@@ -257,6 +260,11 @@ main() {
     echo ""
     
     print_summary
+    
+    echo ""
+    print_info "Setup complete! You can now:"
+    echo "  - Run: ./scripts/run.sh"
+    echo "  - Or: ./scripts/run.sh chrome"
 }
 
 # Run main function
